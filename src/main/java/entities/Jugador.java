@@ -26,6 +26,7 @@ public class Jugador implements Serializable {
 
     @ManyToMany(mappedBy = "jugadores")
     private Set<Videojuego> videojuegos;
+
     public Jugador() {
     }
 
