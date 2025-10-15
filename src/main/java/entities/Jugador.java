@@ -8,6 +8,16 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
+
+@NamedQueries(
+        {
+            @NamedQuery(name = "Jugador.listarConMasVideojuegos",query = "SELECT j, COUNT(v.id) AS total_videojuegos FROM Jugador j JOIN j.videojuegos v GROUP BY j ORDER BY total_videojuegos DESC"),
+            @NamedQuery(name = "Jugador.buscarPorPuntajeTotalMayorA",query = "SELECT j FROM Jugador j JOIN j.videojuegos v JOIN v.logros l GROUP BY j HAVING SUM(l.puntaje) > :puntajeMinimo"),
+            @NamedQuery(name = "Jugador.buscarPorColoniaYConVariosVideojuegos",query = "SELECT j FROM Jugador j WHERE j.direccion.colonia = :colonia AND SIZE(j.videojuegos) > 1"),
+            @NamedQuery(name = "Jugador.ordenarPorEdadDesc",query = "SELECT j FROM Jugador j ORDER BY j.fechaNacimiento ASC"),
+            @NamedQuery(name = "Jugador.listarConDireccionOrdenadosPorColonia",query = "SELECT j, j.direccion.calle, j.direccion.colonia FROM Jugador j ORDER BY j.direccion.colonia ASC")
+        }
+)
 public class Jugador implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,7 +37,14 @@ public class Jugador implements Serializable {
     @ManyToMany(mappedBy = "jugadores")
     private Set<Videojuego> videojuegos;
 
-    public Jugador() {
+    public Jugador(){}
+
+    public Jugador(String pseudonimo, String sexo, LocalDate fechaNacimiento, Direccion direccion, Set<Videojuego> videojuegos) {
+        this.pseudonimo = pseudonimo;
+        this.sexo = sexo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.direccion = direccion;
+        this.videojuegos = videojuegos;
     }
 
     public long getId() {

@@ -6,6 +6,11 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
+@NamedQueries(
+        {
+        @NamedQuery(name = "Logro.buscarConPuntajeMayorAlPromedio",query = "SELECT l FROM Logro l WHERE l.puntaje > (SELECT AVG(l2.puntaje) FROM Logro l2)")
+        }
+)
 public class Logro implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -15,7 +20,7 @@ public class Logro implements Serializable {
     private long id;
 
     private String nombre;
-    private int puntos;
+    private int puntaje;
 
     @ManyToOne
     @JoinColumn(name = "videojuego")
@@ -23,11 +28,16 @@ public class Logro implements Serializable {
 
     public Logro() {
     }
+    public Logro(String nombre, int puntaje, Videojuego videojuego) {
+        this.nombre = nombre;
+        this.puntaje = puntaje;
+        this.videojuego = videojuego;
+    }
 
-    public Logro(long id, String nombre, int puntos, Videojuego videojuego) {
+    public Logro(long id, String nombre, int puntaje, Videojuego videojuego) {
         this.id = id;
         this.nombre = nombre;
-        this.puntos = puntos;
+        this.puntaje = puntaje;
         this.videojuego = videojuego;
     }
 
@@ -48,11 +58,11 @@ public class Logro implements Serializable {
     }
 
     public int getPuntos() {
-        return puntos;
+        return puntaje;
     }
 
-    public void setPuntos(int puntos) {
-        this.puntos = puntos;
+    public void setPuntos(int puntaje) {
+        this.puntaje = puntaje;
     }
 
     public Videojuego getVideojuego() {
@@ -68,7 +78,7 @@ public class Logro implements Serializable {
         return "Logro{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", puntos=" + puntos +
+                ", puntos=" + puntaje +
                 ", videojuego=" + videojuego +
                 '}';
     }

@@ -20,11 +20,9 @@ public class Direccion implements Serializable {
     private String numero;
     private String colonia;
 
-    public Direccion() {
-    }
+    public Direccion(){}
 
-    public Direccion(long id, String calle, String numero, String colonia) {
-        this.id = id;
+    public Direccion(String calle, String numero, String colonia) {
         this.calle = calle;
         this.numero = numero;
         this.colonia = colonia;

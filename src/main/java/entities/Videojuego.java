@@ -4,9 +4,22 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "videojuego")
+@NamedQueries(
+        {
+                @NamedQuery(name = "Videojuego.findAll",query = "SELECT v FROM Videojuego v"),
+                @NamedQuery(name = "Videojuego.listarConMayorNumeroDeLogros", query = "SELECT v, COUNT(l.id) AS total_logros FROM Videojuego v JOIN v.logros l GROUP BY v ORDER BY total_logros DESC"),
+                @NamedQuery(name = "Videojuego.buscarSinLogros", query = "SELECT v FROM Videojuego v WHERE v.logros IS EMPTY"),
+                @NamedQuery(name = "Videojuego.buscarConSumaPuntosLogrosMayorA", query = "SELECT v FROM Videojuego v JOIN v.logros l GROUP BY v HAVING SUM(l.puntaje) > :puntajeTotalMinimo"),
+                @NamedQuery(name = "Videojuego.buscarConLogroMasAlto", query = "SELECT v FROM Videojuego v JOIN v.logros l WHERE l.puntaje = (SELECT MAX(l2.puntaje) FROM Logro l2)")
+        }
+)
+
+
 public class Videojuego implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -30,7 +43,14 @@ public class Videojuego implements Serializable {
     )
     private Set<Jugador> jugadores;
 
-    public Videojuego() {
+    public Videojuego(){}
+
+    public Videojuego(String nombre, int puntaje, String desarrolladora, Set<Logro> logros, Set<Jugador> jugadores) {
+        this.nombre = nombre;
+        this.puntaje = puntaje;
+        this.desarrolladora = desarrolladora;
+        this.logros = logros;
+        this.jugadores = jugadores;
     }
 
     public Videojuego(long id, String nombre, int puntaje, String desarrolladora, Set<Logro> logros, Set<Jugador> jugadores) {
@@ -41,6 +61,8 @@ public class Videojuego implements Serializable {
         this.logros = logros;
         this.jugadores = jugadores;
     }
+
+
 
     public long getId() {
         return id;
